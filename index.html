@@ -417,17 +417,87 @@
 
   /* =============== SLIDE 4 · LIVE DEMO =============== */
   #demo { background: var(--white); }
-  .demo-wrap {
+  /* clock + milestones strip */
+  .demo-top {
     display: flex;
     align-items: center;
-    gap: clamp(2.5rem, 6vw, 6rem);
-    margin-top: 1.6rem;
+    gap: clamp(1.6rem, 4vw, 3.5rem);
+    margin: 0.6rem 0 1.4rem;
   }
+  .demo-wrap {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(1.2rem, 3vw, 2.8rem);
+  }
+  .panel { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; }
+  .pcap {
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--faint);
+  }
+
+  /* Engage app panel (CRM record, updated live) */
+  .engage-app {
+    width: min(300px, 26vw);
+    height: min(56vh, 540px);
+    border-radius: 20px;
+    background: var(--white);
+    border: 1px solid var(--line);
+    box-shadow: 0 18px 50px rgba(10,10,10,0.14);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    text-align: left;
+  }
+  .ea-head {
+    background: var(--blue); color: #fff;
+    padding: 0.75rem 0.95rem;
+    display: flex; align-items: center; gap: 0.55rem;
+    flex-shrink: 0;
+  }
+  .ea-head .mk { width: 1.5rem; height: 1.5rem; background: #fff; border-radius: 4px; color: var(--blue); padding: 2px; }
+  .ea-head .mk svg { width: 100%; height: 100%; display: block; }
+  .ea-head .t { font-weight: 700; font-size: 0.85rem; line-height: 1.1; }
+  .ea-head .s { font-size: 0.64rem; opacity: 0.8; }
+  .ea-body {
+    flex: 1; overflow-y: auto;
+    padding: 0.8rem 0.7rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    scroll-behavior: smooth;
+    background: var(--surface);
+  }
+  .note {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--blue);
+    border-radius: 8px;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: var(--ink);
+    animation: bubin 0.3s cubic-bezier(.2,.8,.3,1.2);
+  }
+  .note b {
+    display: block;
+    font-size: 0.58rem; font-weight: 800; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--blue);
+    margin-bottom: 0.15rem;
+  }
+
+  /* quick-reply buttons on broker side */
+  .qr { display: flex; gap: 0.35rem; margin-top: 0.45rem; flex-wrap: wrap; }
+  .qr span {
+    font-size: 0.68rem; font-weight: 700;
+    border-radius: 999px;
+    padding: 0.28rem 0.7rem;
+    border: 1.5px solid #128C7E; color: #128C7E;
+  }
+  .qr span.neg { border-color: #C0392B; color: #C0392B; }
+  .bub .bt { font-weight: 700; display: block; margin-bottom: 0.15rem; }
 
   /* phone frame */
   .wa-phone {
-    width: min(360px, 88vw);
-    height: min(66vh, 620px);
+    width: min(300px, 26vw);
+    height: min(56vh, 540px);
     border-radius: 34px;
     background: #F5F1EB;
     border: 8px solid #111;
@@ -493,25 +563,25 @@
   .bub.typing i:nth-child(3) { animation-delay: 0.3s; }
   @keyframes tdot { 0%,100% { transform: translateY(0); opacity: 0.5; } 40% { transform: translateY(-4px); opacity: 1; } }
 
-  /* right column: running clock + milestones */
-  .demo-side { text-align: left; display: flex; flex-direction: column; gap: 1.6rem; }
+  /* running clock + milestones */
   .demo-clock {
-    font-size: clamp(3rem, 7vw, 5.2rem);
+    font-size: clamp(2.2rem, 4.4vw, 3.4rem);
     font-weight: 800; letter-spacing: -0.04em;
     line-height: 1;
     font-variant-numeric: tabular-nums;
     color: var(--ink);
   }
-  .demo-clock .u { font-size: 0.32em; font-weight: 700; color: var(--muted); margin-left: 0.2em; }
+  .demo-clock .u { font-size: 0.34em; font-weight: 700; color: var(--muted); margin-left: 0.2em; }
   .demo-clock.done { color: var(--blue); animation: clockpop 0.5s cubic-bezier(.2,.8,.3,1.4); }
   @keyframes clockpop { 50% { transform: scale(1.12); } }
-  .miles { display: flex; flex-direction: column; gap: 0.9rem; }
+  .miles { display: flex; gap: clamp(1rem, 2.4vw, 2rem); }
   .mile {
-    display: flex; align-items: center; gap: 0.8rem;
-    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    display: flex; align-items: center; gap: 0.55rem;
+    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
     font-weight: 700; letter-spacing: -0.015em;
     color: var(--faint);
     opacity: 0.45;
+    text-align: left;
     transition: opacity 0.4s ease, color 0.4s ease;
   }
   .mile .ck {
@@ -530,7 +600,6 @@
   @keyframes ckpop { 50% { transform: scale(1.3); } }
   .mile .sub { display: block; font-size: 0.72em; font-weight: 600; color: var(--muted); }
   .demo-replay {
-    align-self: flex-start;
     font-family: inherit;
     font-size: 0.8rem; font-weight: 700;
     color: var(--blue);
@@ -539,9 +608,10 @@
     padding: 0.55rem 1.2rem;
     cursor: pointer;
   }
-  @media (max-width: 900px) {
-    .demo-wrap { flex-direction: column; gap: 1.6rem; }
-    .wa-phone { height: 52vh; }
+  @media (max-width: 980px) {
+    .panel.side { display: none; }
+    .wa-phone, .engage-app { width: min(320px, 86vw); }
+    .demo-top { flex-wrap: wrap; gap: 1rem; justify-content: center; }
   }
 
   /* =============== SLIDE 5 · THE TRANSFORMATION =============== */
@@ -848,23 +918,48 @@
 <section id="demo">
   <div class="eyebrow rv">Watch a lead become a viewing</div>
 
-  <div class="demo-wrap rv d1">
-    <div class="wa-phone">
-      <div class="wa-head">
-        <span class="av">S</span>
-        <div><div class="nm">SmartView</div><div class="on">online</div></div>
+  <div class="demo-top rv d1">
+    <div class="demo-clock" id="demoClock">0<span class="u">min</span></div>
+    <div class="miles">
+      <div class="mile" id="m1"><span class="ck">✓</span><span>First contact<span class="sub">Instant</span></span></div>
+      <div class="mile" id="m2"><span class="ck">✓</span><span>Qualified<span class="sub">10 min</span></span></div>
+      <div class="mile" id="m3"><span class="ck">✓</span><span>Viewing committed<span class="sub">13 min</span></span></div>
+    </div>
+    <button class="demo-replay" id="demoReplay">↻ Replay</button>
+  </div>
+
+  <div class="demo-wrap rv d2">
+    <div class="panel">
+      <span class="pcap">Applicant · WhatsApp</span>
+      <div class="wa-phone">
+        <div class="wa-head">
+          <span class="av">S</span>
+          <div><div class="nm">SmartView</div><div class="on">online</div></div>
+        </div>
+        <div class="wa-chat" id="waChat"></div>
       </div>
-      <div class="wa-chat" id="waChat"></div>
     </div>
 
-    <div class="demo-side">
-      <div class="demo-clock" id="demoClock">0<span class="u">min</span></div>
-      <div class="miles">
-        <div class="mile" id="m1"><span class="ck">✓</span><span>First contact<span class="sub">Instant</span></span></div>
-        <div class="mile" id="m2"><span class="ck">✓</span><span>Qualified<span class="sub">10 min</span></span></div>
-        <div class="mile" id="m3"><span class="ck">✓</span><span>Viewing committed<span class="sub">13 min</span></span></div>
+    <div class="panel side">
+      <span class="pcap">Engage app · live record</span>
+      <div class="engage-app">
+        <div class="ea-head">
+          <span class="mk"><svg><use href="#e-mark"/></svg></span>
+          <div><div class="t">Applicant Preview</div><div class="s">Notes · updated by EngageAI</div></div>
+        </div>
+        <div class="ea-body" id="eaBody"></div>
       </div>
-      <button class="demo-replay" id="demoReplay">↻ Replay</button>
+    </div>
+
+    <div class="panel side">
+      <span class="pcap">Broker · WhatsApp</span>
+      <div class="wa-phone">
+        <div class="wa-head">
+          <span class="av">E</span>
+          <div><div class="nm">EngageAI</div><div class="on">Broker Assistant</div></div>
+        </div>
+        <div class="wa-chat" id="brChat"></div>
+      </div>
     </div>
   </div>
 
@@ -1024,57 +1119,88 @@
     });
   }
 
-  // ---- live demo: the real Studio One conversation, 13 minutes in ~14 seconds ----
+  // ---- live demo: one lead across three surfaces, 13 minutes in ~14 seconds ----
   const waChat = document.getElementById('waChat');
+  const brChat = document.getElementById('brChat');
+  const eaBody = document.getElementById('eaBody');
   const demoClock = document.getElementById('demoClock');
-  let demoTimers = [], demoRAF = null, typingEl = null;
+  let demoTimers = [], demoRAF = null;
+  const typingEls = new Map();
 
-  function bubble(cls, html) {
-    if (typingEl) { typingEl.remove(); typingEl = null; }
+  function bubble(chat, cls, html) {
+    const t = typingEls.get(chat);
+    if (t) { t.remove(); typingEls.delete(chat); }
     const b = document.createElement('div');
     b.className = 'bub ' + cls;
     b.innerHTML = html;
-    waChat.appendChild(b);
-    waChat.scrollTop = waChat.scrollHeight;
+    chat.appendChild(b);
+    chat.scrollTop = chat.scrollHeight;
   }
-  function typing() {
-    typingEl = document.createElement('div');
-    typingEl.className = 'bub l typing';
-    typingEl.innerHTML = '<i></i><i></i><i></i>';
-    waChat.appendChild(typingEl);
-    waChat.scrollTop = waChat.scrollHeight;
+  function typing(chat) {
+    const el = document.createElement('div');
+    el.className = 'bub l typing';
+    el.innerHTML = '<i></i><i></i><i></i>';
+    chat.appendChild(el);
+    chat.scrollTop = chat.scrollHeight;
+    typingEls.set(chat, el);
+  }
+  function note(html) {
+    const n = document.createElement('div');
+    n.className = 'note';
+    n.innerHTML = '<b>Note added by EngageAI</b>' + html;
+    eaBody.appendChild(n);
+    eaBody.scrollTop = eaBody.scrollHeight;
   }
 
   // [playback ms, action]  — sim clock keyframes map playback time to "minutes elapsed"
   const script = [
-    [500,   () => bubble('l prop', '<div class="ph"></div><div class="pt"><b>Studio One · Dubai Marina</b><span>Studio · AED 60,000/yr · Furnished · Sea view</span></div>')],
-    [1400,  () => bubble('r', 'Can I come to see it?')],
-    [1800,  typing],
-    [2600,  () => { bubble('l', 'Absolutely. I just need your move-in date, budget and preferred number of cheques.'); mark('m1'); }],
-    [4200,  () => bubble('r', 'This week. AED 60,000 works. I prefer 2 cheques.')],
-    [4700,  typing],
-    [5600,  () => bubble('l', 'Noted. The listing says 1 cheque, so I\'ve asked your broker whether 2 can work.')],
-    [7200,  typing],
-    [8000,  () => { bubble('l', 'Your broker has 1–2 PM or 6–8:30 PM open tomorrow. Which suits you?'); mark('m2'); }],
-    [9300,  () => bubble('r', '1 PM please.')],
-    [9800,  typing],
-    [10500, () => bubble('l', 'Requested. Please wait for confirmation before heading over.')],
-    [11800, () => bubble('sys', '✓ Broker confirmed')],
-    [12300, typing],
-    [13000, () => { bubble('l', 'Great news! Your viewing is confirmed for tomorrow, 1:00 PM.'); mark('m3'); demoClock.classList.add('done'); }],
+    // enquiry + instant contact
+    [500,   () => bubble(waChat, 'l prop', '<div class="ph"></div><div class="pt"><b>Studio One · Dubai Marina</b><span>Studio · AED 60,000/yr · Furnished · Sea view</span></div>')],
+    [1400,  () => bubble(waChat, 'r', 'Can I come to see it?')],
+    [1700,  () => note('New enquiry — Studio One, Dubai Marina. Applicant wants a viewing.')],
+    [1800,  () => typing(waChat)],
+    [2600,  () => { bubble(waChat, 'l', 'Absolutely. I just need your move-in date, budget and preferred number of cheques.'); mark('m1'); }],
+    // qualification
+    [4200,  () => bubble(waChat, 'r', 'This week. AED 60,000 works. I prefer 2 cheques.')],
+    [4700,  () => typing(waChat)],
+    [5100,  () => note('Budget AED 60,000/yr · move-in this week · 2 cheques. Written to the record.')],
+    [5600,  () => bubble(waChat, 'l', 'Noted. The listing says 1 cheque, so I\'ve asked your broker whether 2 can work.')],
+    [6100,  () => bubble(brChat, 'l', '<span class="bt">Applicant question</span>The listing allows 1 cheque. Can the owner accept 2?<span class="qr"><span>Yes</span><span class="neg">No</span></span>')],
+    [7000,  () => bubble(brChat, 'r', 'Yes, 2 works.')],
+    [7300,  () => typing(waChat)],
+    [8000,  () => { bubble(waChat, 'l', 'Your broker has 1–2 PM or 6–8:30 PM open tomorrow. Which suits you?'); mark('m2'); }],
+    [8300,  () => bubble(brChat, 'l', '<span class="bt">New qualified lead</span>Studio · Rent · AED 60K · 2 cheques · move-in this week')],
+    [8500,  () => note('Qualified. No spam, no agent. Real intent.')],
+    // viewing commitment
+    [9300,  () => bubble(waChat, 'r', '1 PM please.')],
+    [9800,  () => typing(waChat)],
+    [10500, () => bubble(waChat, 'l', 'Requested. Please wait for confirmation before heading over.')],
+    [10800, () => bubble(brChat, 'l', '<span class="bt">New viewing request</span>Studio One · Tomorrow · 1:00 PM<span class="qr"><span>Confirm</span><span>Suggest time</span><span class="neg">Decline</span></span>')],
+    [11700, () => bubble(brChat, 'r', 'Confirm — tomorrow, 1:00 PM')],
+    [11900, () => bubble(waChat, 'sys', '✓ Broker confirmed')],
+    [12300, () => typing(waChat)],
+    [13000, () => {
+      bubble(waChat, 'l', 'Great news! Your viewing is confirmed for tomorrow, 1:00 PM.');
+      bubble(brChat, 'sys', '✓ Viewing confirmed · applicant notified');
+      note('Viewing confirmed for tomorrow 1:00 PM. Calendar and CRM updated.');
+      mark('m3');
+      demoClock.classList.add('done');
+    }],
   ];
-  const clockKeys = [[500,0],[2600,0],[4200,2],[5600,4],[8000,10],[9300,11],[11800,12.5],[13000,13]];
+  const clockKeys = [[500,0],[2600,0],[4200,2],[5600,4],[8000,10],[9300,11],[11900,12.5],[13000,13]];
 
   function mark(id) { document.getElementById(id).classList.add('on'); }
 
   function stopDemo() {
     demoTimers.forEach(clearTimeout); demoTimers = [];
     if (demoRAF) cancelAnimationFrame(demoRAF); demoRAF = null;
-    typingEl = null;
+    typingEls.clear();
   }
   function startDemo() {
     stopDemo();
     waChat.innerHTML = '';
+    brChat.innerHTML = '';
+    eaBody.innerHTML = '';
     demoClock.classList.remove('done');
     demoClock.innerHTML = '0<span class="u">min</span>';
     ['m1','m2','m3'].forEach(id => document.getElementById(id).classList.remove('on'));
