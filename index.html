@@ -137,26 +137,72 @@
     gap: clamp(0.9rem, 2.6vh, 1.6rem);
     text-align: left;
   }
+  .hear-eyebrow { font-size: 1rem; margin-bottom: 3rem; }
+
+  /* ambient drifting glow */
+  #hear .glow {
+    position: absolute;
+    width: 58vw; aspect-ratio: 1;
+    right: -14vw; top: -6vh;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(26,92,235,0.09), transparent 62%);
+    animation: drift 9s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes drift {
+    from { transform: translate(0, 0) scale(1); }
+    to { transform: translate(-9vw, 10vh) scale(1.15); }
+  }
+  /* blue light flash when the finished problem takes the stage */
+  #hear .flashfx {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 40% 70%, rgba(26,92,235,0.16), transparent 55%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  #hear.active .flashfx { animation: flashpop 0.7s ease 4.55s; }
+  @keyframes flashpop { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
+
   .track {
     position: relative;
     white-space: nowrap;
-    font-size: clamp(1.5rem, 4.6vw, 3.6rem);
+    font-size: clamp(1.5rem, 4.8vw, 3.8rem);
     font-weight: 800;
     letter-spacing: -0.035em;
     line-height: 1.15;
     color: var(--ink);
     padding-bottom: 0.28em;
-    /* speed-streak entrance */
-    opacity: 0;
-    transform: translateX(-70px) skewX(-8deg);
-    transition: opacity 0.55s ease, transform 0.6s cubic-bezier(.2,.8,.25,1.15);
+    transform-origin: left bottom;
   }
-  #hear.active .track { opacity: 1; transform: none; }
-  #hear.active .track:nth-child(1) { transition-delay: 0.8s; }
-  #hear.active .track:nth-child(2) { transition-delay: 1.05s; }
-  #hear.active .track:nth-child(3) { transition-delay: 1.3s; }
-  #hear.active .track:nth-child(4) { transition-delay: 1.55s; }
-  #hear.active .track.done { color: var(--blue); transition-delay: 1.55s, 1.55s, 0s; transition-property: opacity, transform, color; }
+  /* letters materialize one by one (delays set per-char in JS) */
+  .track .ch {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.6em) rotate(3deg);
+    filter: blur(10px);
+    transition: opacity 0.5s ease, transform 0.65s cubic-bezier(.2,.75,.25,1.12), filter 0.5s ease;
+  }
+  #hear.active .track .ch { opacity: 1; transform: none; filter: blur(0); }
+
+  /* finale: focus pull. In-progress problems step back… */
+  #hear.active .track:not(.done) {
+    opacity: 0.24;
+    filter: blur(2.5px);
+    transform: scale(0.965);
+    transition: opacity 0.8s ease 4.3s, filter 0.8s ease 4.3s, transform 0.8s ease 4.3s;
+  }
+  /* …and the finished one takes the stage */
+  #hear.active .track.done {
+    color: var(--blue);
+    transform: scale(1.14);
+    transition: color 0.5s ease 4.3s, transform 0.75s cubic-bezier(.2,.8,.3,1.25) 4.3s;
+    animation: landed 0.35s ease 4.75s;
+  }
+  @keyframes landed {
+    0%, 100% { transform: scale(1.14) rotate(0); }
+    35% { transform: scale(1.16) rotate(-0.7deg); }
+    70% { transform: scale(1.13) rotate(0.4deg); }
+  }
 
   /* progress underline racing beneath each problem */
   .track .under {
@@ -206,13 +252,14 @@
     padding: 0.18em 0.5em;
     opacity: 0;
     transform: translateY(-50%) rotate(-14deg) scale(3);
-    transition: opacity 0.28s ease 4.1s,
-                transform 0.38s cubic-bezier(.2,.85,.3,1.25) 4.1s;
+    transition: opacity 0.28s ease 4.75s,
+                transform 0.38s cubic-bezier(.2,.85,.3,1.25) 4.75s;
   }
   #hear.active .track .stamp { opacity: 1; transform: translateY(-50%) rotate(-8deg) scale(1); }
   /* instant reset when leaving the slide, so the replay is clean */
   #hear:not(.active) .track .stamp,
   #hear:not(.active) .track,
+  #hear:not(.active) .track .ch,
   #hear:not(.active) .track .under i { transition: none; }
 
   @media (max-width: 700px) {
@@ -613,8 +660,9 @@
 
 <!-- ============ 1 · WE HEAR YOU ============ -->
 <section id="hear">
-  <div class="eyebrow rv">We hear you</div>
-  <h1 class="rv d1">Everything you told us.<br>All in motion.</h1>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="flashfx" aria-hidden="true"></div>
+  <div class="eyebrow hear-eyebrow rv">We hear you</div>
 
   <div class="tracks">
     <div class="track">Fresh, clean, accessible data<span class="under"><i></i></span></div>
@@ -760,6 +808,22 @@
     pip.setAttribute('aria-label', 'Slide ' + (i + 1));
     pip.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
     rail.appendChild(pip);
+  });
+
+  // ---- split slide-1 problems into per-letter spans with staggered delays ----
+  document.querySelectorAll('#hear .track').forEach((track, li) => {
+    const textNode = track.firstChild; // the problem text
+    const text = textNode.textContent;
+    const frag = document.createDocumentFragment();
+    const base = 0.7 + li * 0.5;
+    [...text].forEach((c, i) => {
+      const s = document.createElement('span');
+      s.className = 'ch';
+      s.textContent = c === ' ' ? '\u00A0' : c;
+      s.style.transitionDelay = (base + i * 0.026) + 's';
+      frag.appendChild(s);
+    });
+    track.replaceChild(frag, textNode);
   });
 
   // ---- 100-dot applicant grid ----
