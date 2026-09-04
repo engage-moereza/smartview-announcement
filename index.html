@@ -415,7 +415,136 @@
   }
   @media (max-width: 999px) { #reveal .phone { display: none; } }
 
-  /* =============== SLIDE 4 · THE TRANSFORMATION =============== */
+  /* =============== SLIDE 4 · LIVE DEMO =============== */
+  #demo { background: var(--white); }
+  .demo-wrap {
+    display: flex;
+    align-items: center;
+    gap: clamp(2.5rem, 6vw, 6rem);
+    margin-top: 1.6rem;
+  }
+
+  /* phone frame */
+  .wa-phone {
+    width: min(360px, 88vw);
+    height: min(66vh, 620px);
+    border-radius: 34px;
+    background: #F5F1EB;
+    border: 8px solid #111;
+    box-shadow: 0 30px 70px rgba(10,10,10,0.25);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    text-align: left;
+  }
+  .wa-head {
+    background: #075E54;
+    color: #fff;
+    padding: 0.8rem 1rem;
+    display: flex; align-items: center; gap: 0.7rem;
+    flex-shrink: 0;
+  }
+  .wa-head .av {
+    width: 2.1rem; height: 2.1rem; border-radius: 50%;
+    background: #fff; color: #075E54;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1rem;
+  }
+  .wa-head .nm { font-weight: 700; font-size: 0.95rem; line-height: 1.1; }
+  .wa-head .on { font-size: 0.7rem; opacity: 0.8; }
+  .wa-chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.9rem 0.8rem;
+    display: flex; flex-direction: column; gap: 0.45rem;
+    scroll-behavior: smooth;
+  }
+  .bub {
+    max-width: 82%;
+    padding: 0.55rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+    animation: bubin 0.3s cubic-bezier(.2,.8,.3,1.2);
+    transform-origin: bottom left;
+  }
+  @keyframes bubin { from { opacity: 0; transform: scale(0.7) translateY(10px); } }
+  .bub.l { align-self: flex-start; background: #fff; border-top-left-radius: 4px; }
+  .bub.r { align-self: flex-end; background: #D9FDD3; border-top-right-radius: 4px; transform-origin: bottom right; }
+  .bub.sys {
+    align-self: center;
+    background: #E7F6E9; color: #1E8E3E;
+    font-weight: 700; font-size: 0.74rem;
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+  }
+  .bub.prop { padding: 0; overflow: hidden; width: 82%; }
+  .bub.prop .ph { height: 5.2rem; background: linear-gradient(135deg, #B8CBE8, #DCE6F5); }
+  .bub.prop .pt { padding: 0.55rem 0.75rem; font-size: 0.8rem; }
+  .bub.prop .pt b { display: block; }
+  .bub.prop .pt span { color: var(--muted); font-size: 0.74rem; }
+  .bub.typing { display: flex; gap: 4px; padding: 0.7rem 0.9rem; }
+  .bub.typing i {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #A9A9A4;
+    animation: tdot 1s ease-in-out infinite;
+  }
+  .bub.typing i:nth-child(2) { animation-delay: 0.15s; }
+  .bub.typing i:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes tdot { 0%,100% { transform: translateY(0); opacity: 0.5; } 40% { transform: translateY(-4px); opacity: 1; } }
+
+  /* right column: running clock + milestones */
+  .demo-side { text-align: left; display: flex; flex-direction: column; gap: 1.6rem; }
+  .demo-clock {
+    font-size: clamp(3rem, 7vw, 5.2rem);
+    font-weight: 800; letter-spacing: -0.04em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .demo-clock .u { font-size: 0.32em; font-weight: 700; color: var(--muted); margin-left: 0.2em; }
+  .demo-clock.done { color: var(--blue); animation: clockpop 0.5s cubic-bezier(.2,.8,.3,1.4); }
+  @keyframes clockpop { 50% { transform: scale(1.12); } }
+  .miles { display: flex; flex-direction: column; gap: 0.9rem; }
+  .mile {
+    display: flex; align-items: center; gap: 0.8rem;
+    font-size: clamp(1rem, 1.8vw, 1.3rem);
+    font-weight: 700; letter-spacing: -0.015em;
+    color: var(--faint);
+    opacity: 0.45;
+    transition: opacity 0.4s ease, color 0.4s ease;
+  }
+  .mile .ck {
+    width: 1.7em; height: 1.7em; border-radius: 50%;
+    border: 2.5px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.35s ease;
+    font-size: 0.8em; color: transparent;
+  }
+  .mile.on { opacity: 1; color: var(--ink); }
+  .mile.on .ck {
+    background: var(--blue); border-color: var(--blue); color: #fff;
+    animation: ckpop 0.4s cubic-bezier(.2,.8,.3,1.5);
+  }
+  @keyframes ckpop { 50% { transform: scale(1.3); } }
+  .mile .sub { display: block; font-size: 0.72em; font-weight: 600; color: var(--muted); }
+  .demo-replay {
+    align-self: flex-start;
+    font-family: inherit;
+    font-size: 0.8rem; font-weight: 700;
+    color: var(--blue);
+    background: var(--blue-soft);
+    border: none; border-radius: 999px;
+    padding: 0.55rem 1.2rem;
+    cursor: pointer;
+  }
+  @media (max-width: 900px) {
+    .demo-wrap { flex-direction: column; gap: 1.6rem; }
+    .wa-phone { height: 52vh; }
+  }
+
+  /* =============== SLIDE 5 · THE TRANSFORMATION =============== */
   #proof { background: var(--surface); }
   #proof h2 { font-size: clamp(2.2rem, 4.8vw, 3.8rem); }
   #proof .sub { margin-top: 0.9rem; font-size: 1.05rem; color: var(--muted); }
@@ -715,7 +844,36 @@
   </div>
 </section>
 
-<!-- ============ 4 · THE TRANSFORMATION ============ -->
+<!-- ============ 4 · LIVE DEMO ============ -->
+<section id="demo">
+  <div class="eyebrow rv">Watch a lead become a viewing</div>
+
+  <div class="demo-wrap rv d1">
+    <div class="wa-phone">
+      <div class="wa-head">
+        <span class="av">S</span>
+        <div><div class="nm">SmartView</div><div class="on">online</div></div>
+      </div>
+      <div class="wa-chat" id="waChat"></div>
+    </div>
+
+    <div class="demo-side">
+      <div class="demo-clock" id="demoClock">0<span class="u">min</span></div>
+      <div class="miles">
+        <div class="mile" id="m1"><span class="ck">✓</span><span>First contact<span class="sub">Instant</span></span></div>
+        <div class="mile" id="m2"><span class="ck">✓</span><span>Qualified<span class="sub">10 min</span></span></div>
+        <div class="mile" id="m3"><span class="ck">✓</span><span>Viewing committed<span class="sub">13 min</span></span></div>
+      </div>
+      <button class="demo-replay" id="demoReplay">↻ Replay</button>
+    </div>
+  </div>
+
+  <div class="scroll-cue rv d3">
+    <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- ============ 5 · THE TRANSFORMATION ============ -->
 <section id="proof">
   <h2 class="rv">Watch the numbers.</h2>
   <p class="sub rv d1">Real results from months of testing with your colleagues.</p>
@@ -866,6 +1024,79 @@
     });
   }
 
+  // ---- live demo: the real Studio One conversation, 13 minutes in ~14 seconds ----
+  const waChat = document.getElementById('waChat');
+  const demoClock = document.getElementById('demoClock');
+  let demoTimers = [], demoRAF = null, typingEl = null;
+
+  function bubble(cls, html) {
+    if (typingEl) { typingEl.remove(); typingEl = null; }
+    const b = document.createElement('div');
+    b.className = 'bub ' + cls;
+    b.innerHTML = html;
+    waChat.appendChild(b);
+    waChat.scrollTop = waChat.scrollHeight;
+  }
+  function typing() {
+    typingEl = document.createElement('div');
+    typingEl.className = 'bub l typing';
+    typingEl.innerHTML = '<i></i><i></i><i></i>';
+    waChat.appendChild(typingEl);
+    waChat.scrollTop = waChat.scrollHeight;
+  }
+
+  // [playback ms, action]  — sim clock keyframes map playback time to "minutes elapsed"
+  const script = [
+    [500,   () => bubble('l prop', '<div class="ph"></div><div class="pt"><b>Studio One · Dubai Marina</b><span>Studio · AED 60,000/yr · Furnished · Sea view</span></div>')],
+    [1400,  () => bubble('r', 'Can I come to see it?')],
+    [1800,  typing],
+    [2600,  () => { bubble('l', 'Absolutely. I just need your move-in date, budget and preferred number of cheques.'); mark('m1'); }],
+    [4200,  () => bubble('r', 'This week. AED 60,000 works. I prefer 2 cheques.')],
+    [4700,  typing],
+    [5600,  () => bubble('l', 'Noted. The listing says 1 cheque, so I\'ve asked your broker whether 2 can work.')],
+    [7200,  typing],
+    [8000,  () => { bubble('l', 'Your broker has 1–2 PM or 6–8:30 PM open tomorrow. Which suits you?'); mark('m2'); }],
+    [9300,  () => bubble('r', '1 PM please.')],
+    [9800,  typing],
+    [10500, () => bubble('l', 'Requested. Please wait for confirmation before heading over.')],
+    [11800, () => bubble('sys', '✓ Broker confirmed')],
+    [12300, typing],
+    [13000, () => { bubble('l', 'Great news! Your viewing is confirmed for tomorrow, 1:00 PM.'); mark('m3'); demoClock.classList.add('done'); }],
+  ];
+  const clockKeys = [[500,0],[2600,0],[4200,2],[5600,4],[8000,10],[9300,11],[11800,12.5],[13000,13]];
+
+  function mark(id) { document.getElementById(id).classList.add('on'); }
+
+  function stopDemo() {
+    demoTimers.forEach(clearTimeout); demoTimers = [];
+    if (demoRAF) cancelAnimationFrame(demoRAF); demoRAF = null;
+    typingEl = null;
+  }
+  function startDemo() {
+    stopDemo();
+    waChat.innerHTML = '';
+    demoClock.classList.remove('done');
+    demoClock.innerHTML = '0<span class="u">min</span>';
+    ['m1','m2','m3'].forEach(id => document.getElementById(id).classList.remove('on'));
+    script.forEach(([t, fn]) => demoTimers.push(setTimeout(fn, t)));
+    const t0 = performance.now();
+    function tickClock(now) {
+      const t = now - t0;
+      let sim = 13;
+      for (let i = 1; i < clockKeys.length; i++) {
+        if (t <= clockKeys[i][0]) {
+          const [ta, sa] = clockKeys[i-1], [tb, sb] = clockKeys[i];
+          sim = sa + (sb - sa) * Math.max(0, (t - ta) / (tb - ta));
+          break;
+        }
+      }
+      demoClock.innerHTML = Math.round(sim) + '<span class="u">min</span>';
+      if (t < 13200) demoRAF = requestAnimationFrame(tickClock);
+    }
+    demoRAF = requestAnimationFrame(tickClock);
+  }
+  document.getElementById('demoReplay').addEventListener('click', (e) => { e.stopPropagation(); startDemo(); });
+
   // ---- slide activation ----
   function goTo(i) {
     const next = Math.min(Math.max(i, 0), sections.length - 1);
@@ -881,6 +1112,7 @@
     const sec = sections[current];
     if (sec.id === 'pain') { playDots(); setTimeout(() => playCounts(sec), 2200); }
     else resetDots();
+    if (sec.id === 'demo') startDemo(); else stopDemo();
 
     setTimeout(() => { locked = false; }, SLIDE_MS + 150);
   }
