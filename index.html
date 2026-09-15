@@ -23,37 +23,27 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html, body { height: 100%; overflow: hidden; }
+  html { scroll-behavior: smooth; }
 
   body {
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--ink);
     background: var(--white);
     -webkit-font-smoothing: antialiased;
-  }
-
-  /* ---------- deck mechanics ---------- */
-  #deck {
-    height: 100%;
-    transition: transform var(--slide-ms) cubic-bezier(.76, 0, .24, 1);
-    will-change: transform;
+    overflow-x: hidden;
   }
 
   section {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 4rem 8vw;
+    padding: 5rem 8vw;
     position: relative;
     overflow: hidden;
-    transition: opacity calc(var(--slide-ms) * 0.9) ease, transform var(--slide-ms) cubic-bezier(.76,0,.24,1);
   }
-  /* depth: non-active slides sit dimmed + slightly scaled, so transitions feel layered */
-  section:not(.active) { opacity: 0.25; transform: scale(0.965); }
-  section.active { opacity: 1; transform: scale(1); }
 
   .eyebrow {
     font-size: 0.82rem;
@@ -397,18 +387,17 @@
     line-height: 1.45;
   }
   #reveal .oneliner b { color: #fff; font-weight: 700; }
-  /* real applicant conversation, rising in */
+  /* applicant conversation on an iPhone, rising in */
   #reveal .phone {
     position: absolute;
-    right: 5vw; bottom: -6vh;
-    height: 86vh;
+    right: 6vw; bottom: -4vh;
     z-index: 2;
-    transform: translateY(70vh) rotate(8deg);
+    transform: translateY(80vh) rotate(8deg);
     transition: transform 1.5s cubic-bezier(.2,.75,.25,1) 1.9s;
-    filter: drop-shadow(0 30px 60px rgba(0,0,0,0.35));
     pointer-events: none;
   }
   #reveal.active .phone { transform: translateY(0) rotate(0deg); }
+  #reveal .phone .wa-phone { width: min(330px, 28vw); height: min(76vh, 700px); }
   @media (min-width: 1000px) {
     #reveal { align-items: flex-start; text-align: left; padding-right: 38vw; }
     #reveal .byline { justify-content: flex-start; }
@@ -494,22 +483,41 @@
   .qr span.neg { border-color: #C0392B; color: #C0392B; }
   .bub .bt { font-weight: 700; display: block; margin-bottom: 0.15rem; }
 
-  /* phone frame */
+  /* iPhone 17-style frame: thin titanium bezel + Dynamic Island */
   .wa-phone {
     width: min(300px, 26vw);
     height: min(56vh, 540px);
-    border-radius: 34px;
-    background: #F5F1EB;
-    border: 8px solid #111;
-    box-shadow: 0 30px 70px rgba(10,10,10,0.25);
-    display: flex; flex-direction: column;
-    overflow: hidden;
+    border-radius: 50px;
+    background: #050505;
+    border: 2.5px solid #4a4a4e;
+    padding: 8px;
+    box-shadow: 0 30px 70px rgba(10,10,10,0.28), inset 0 0 4px rgba(255,255,255,0.25);
+    display: flex;
+    position: relative;
     text-align: left;
+  }
+  .wa-phone::before {
+    content: "";
+    position: absolute;
+    top: 17px; left: 50%;
+    transform: translateX(-50%);
+    width: 32%; height: 23px;
+    background: #050505;
+    border-radius: 999px;
+    z-index: 6;
+  }
+  .wa-phone .screen {
+    flex: 1;
+    display: flex; flex-direction: column;
+    border-radius: 42px;
+    overflow: hidden;
+    background: #F5F1EB;
+    min-width: 0;
   }
   .wa-head {
     background: #075E54;
     color: #fff;
-    padding: 0.8rem 1rem;
+    padding: 2.5rem 1rem 0.7rem;
     display: flex; align-items: center; gap: 0.7rem;
     flex-shrink: 0;
   }
@@ -626,10 +634,11 @@
     margin-top: 2.4rem;
   }
   .proof-shot { text-align: center; }
-  .proof-shot img {
-    height: min(56vh, 500px);
-    filter: drop-shadow(0 24px 48px rgba(10,10,10,0.22));
+  .proof-shot .wa-phone {
+    width: min(280px, 24vw);
+    height: min(54vh, 500px);
     animation: hover 5s ease-in-out infinite;
+    margin: 0 auto;
   }
   @keyframes hover { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
   .proof-shot .cap {
@@ -907,7 +916,22 @@
     <span>by EngageAI</span>
   </div>
   <p class="oneliner rv d4">Contacts. Qualifies. Books the viewing. <b>You close.</b></p>
-  <img class="phone" src="announcement-assets/phone-applicant.png" alt="A real SmartView WhatsApp conversation with an applicant">
+  <div class="phone" aria-hidden="true">
+    <div class="wa-phone"><div class="screen">
+      <div class="wa-head">
+        <span class="av">S</span>
+        <div><div class="nm">SmartView</div><div class="on">online</div></div>
+      </div>
+      <div class="wa-chat">
+        <div class="bub l prop"><div class="ph"></div><div class="pt"><b>Studio One · Dubai Marina</b><span>Studio · AED 60,000/yr · Furnished · Sea view</span></div></div>
+        <div class="bub r">Can I come to see it?</div>
+        <div class="bub l">Absolutely. I just need your move-in date, budget and preferred number of cheques.</div>
+        <div class="bub r">This week. AED 60,000 works. 2 cheques.</div>
+        <div class="bub sys">✓ Broker confirmed</div>
+        <div class="bub l">Great news! Your viewing is confirmed for tomorrow, 1:00 PM.</div>
+      </div>
+    </div></div>
+  </div>
 
   <div class="scroll-cue rv d5">
     <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -931,13 +955,13 @@
   <div class="demo-wrap rv d2">
     <div class="panel">
       <span class="pcap">Applicant · WhatsApp</span>
-      <div class="wa-phone">
+      <div class="wa-phone"><div class="screen">
         <div class="wa-head">
           <span class="av">S</span>
           <div><div class="nm">SmartView</div><div class="on">online</div></div>
         </div>
         <div class="wa-chat" id="waChat"></div>
-      </div>
+      </div></div>
     </div>
 
     <div class="panel side">
@@ -953,13 +977,13 @@
 
     <div class="panel side">
       <span class="pcap">Broker · WhatsApp</span>
-      <div class="wa-phone">
+      <div class="wa-phone"><div class="screen">
         <div class="wa-head">
           <span class="av">E</span>
           <div><div class="nm">EngageAI</div><div class="on">Broker Assistant</div></div>
         </div>
         <div class="wa-chat" id="brChat"></div>
-      </div>
+      </div></div>
     </div>
   </div>
 
@@ -995,7 +1019,18 @@
     </div>
   </div>
   <div class="proof-shot">
-    <img src="announcement-assets/phone-broker.png" alt="A real broker-side SmartView thread: lead qualified, viewing confirmed">
+    <div class="wa-phone"><div class="screen">
+      <div class="wa-head">
+        <span class="av">E</span>
+        <div><div class="nm">EngageAI</div><div class="on">Broker Assistant</div></div>
+      </div>
+      <div class="wa-chat">
+        <div class="bub l"><span class="bt">New qualified lead</span>Studio · Rent · AED 60K · 2 cheques · move-in this week</div>
+        <div class="bub l"><span class="bt">New viewing request</span>Studio One · Tomorrow · 1:00 PM<span class="qr"><span>Confirm</span><span>Suggest time</span><span class="neg">Decline</span></span></div>
+        <div class="bub r">Confirm — tomorrow, 1:00 PM</div>
+        <div class="bub sys">✓ Viewing confirmed · applicant notified</div>
+      </div>
+    </div></div>
     <span class="cap">Not a mockup. A real conversation.</span>
   </div>
   </div>
@@ -1059,7 +1094,7 @@
     const pip = document.createElement('button');
     pip.className = 'pip';
     pip.setAttribute('aria-label', 'Slide ' + (i + 1));
-    pip.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
+    pip.addEventListener('click', (e) => { e.stopPropagation(); sections[i].scrollIntoView({ behavior: 'smooth' }); });
     rail.appendChild(pip);
   });
 
@@ -1223,63 +1258,29 @@
   }
   document.getElementById('demoReplay').addEventListener('click', (e) => { e.stopPropagation(); startDemo(); });
 
-  // ---- slide activation ----
-  function goTo(i) {
-    const next = Math.min(Math.max(i, 0), sections.length - 1);
-    if (next === current && sections[current].classList.contains('active')) return;
-    locked = true;
-    current = next;
-
-    deck.style.transform = 'translateY(-' + current * 100 + 'vh)';
-    sections.forEach((s, idx) => s.classList.toggle('active', idx === current));
-    rail.querySelectorAll('.pip').forEach((p, idx) => p.classList.toggle('cur', idx === current));
-    rail.classList.toggle('on-blue', sections[current].classList.contains('on-blue'));
-
-    const sec = sections[current];
+  // ---- section activation on scroll (normal web page) ----
+  function activate(sec) {
+    if (sec.classList.contains('active')) return;
+    sec.classList.add('active');
     if (sec.id === 'pain') { playDots(); setTimeout(() => playCounts(sec), 2200); }
-    else resetDots();
-    if (sec.id === 'demo') startDemo(); else stopDemo();
-
-    setTimeout(() => { locked = false; }, SLIDE_MS + 150);
+    if (sec.id === 'demo') startDemo();
+    const idx = sections.indexOf(sec);
+    rail.querySelectorAll('.pip').forEach((p, i) => p.classList.toggle('cur', i === idx));
+    rail.classList.toggle('on-blue', sec.classList.contains('on-blue'));
   }
-
-  // ---- wheel (trackpad-safe: accumulate + lockout) ----
-  let wheelAcc = 0;
-  window.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    if (locked) return;
-    wheelAcc += e.deltaY;
-    if (Math.abs(wheelAcc) > 60) {
-      goTo(current + (wheelAcc > 0 ? 1 : -1));
-      wheelAcc = 0;
-    }
-  }, { passive: false });
-  setInterval(() => { wheelAcc *= 0.6; }, 120);
-
-  // ---- touch ----
-  let touchY = null;
-  window.addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
-  window.addEventListener('touchend', (e) => {
-    if (touchY === null || locked) return;
-    const dy = touchY - e.changedTouches[0].clientY;
-    if (Math.abs(dy) > 50) goTo(current + (dy > 0 ? 1 : -1));
-    touchY = null;
-  }, { passive: true });
-
-  // ---- keys + click ----
-  window.addEventListener('keydown', (e) => {
-    if (['ArrowDown', 'PageDown', ' ', 'Enter', 'ArrowRight'].includes(e.key)) { e.preventDefault(); if (!locked) goTo(current + 1); }
-    if (['ArrowUp', 'PageUp', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); if (!locked) goTo(current - 1); }
-    if (e.key === 'Home') { e.preventDefault(); goTo(0); }
-    if (e.key === 'End') { e.preventDefault(); goTo(sections.length - 1); }
-  });
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('a, button, img')) return;
-    if (!locked) goTo(current + 1);
-  });
-
-  // start
-  goTo(0);
+  function deactivate(sec) {
+    if (!sec.classList.contains('active')) return;
+    sec.classList.remove('active');
+    if (sec.id === 'pain') resetDots();
+    if (sec.id === 'demo') stopDemo();
+  }
+  const secObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.intersectionRatio >= 0.45) activate(e.target);
+      else if (e.intersectionRatio <= 0.05) deactivate(e.target);
+    });
+  }, { threshold: [0.05, 0.45] });
+  sections.forEach(s => secObserver.observe(s));
 </script>
 
 </body>
