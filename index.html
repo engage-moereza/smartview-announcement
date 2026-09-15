@@ -23,27 +23,37 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { scroll-behavior: smooth; }
+  html, body { height: 100%; overflow: hidden; }
 
   body {
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--ink);
     background: var(--white);
     -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+  }
+
+  /* ---------- deck mechanics ---------- */
+  #deck {
+    height: 100%;
+    transition: transform var(--slide-ms) cubic-bezier(.76, 0, .24, 1);
+    will-change: transform;
   }
 
   section {
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: clamp(6rem, 12vh, 9rem) 8vw;
+    padding: 4rem 8vw;
     position: relative;
     overflow: hidden;
+    transition: opacity calc(var(--slide-ms) * 0.9) ease, transform var(--slide-ms) cubic-bezier(.76,0,.24,1);
   }
-  section.tall { min-height: 100vh; }
+  /* depth: non-active slides sit dimmed + slightly scaled, so transitions feel layered */
+  section:not(.active) { opacity: 0.25; transform: scale(0.965); }
+  section.active { opacity: 1; transform: scale(1); }
 
   /* ---------- sticky product nav ---------- */
   #topnav {
@@ -74,6 +84,26 @@
     letter-spacing: 0.01em;
   }
 
+  /* ---------- progress rail ---------- */
+  #rail {
+    position: fixed;
+    right: 1.6rem; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 0.7rem;
+    z-index: 100;
+  }
+  #rail .pip {
+    width: 9px; height: 9px;
+    border-radius: 999px;
+    background: rgba(10,10,10,0.18);
+    cursor: pointer;
+    transition: all 0.35s ease;
+    border: none;
+  }
+  #rail.on-blue .pip { background: rgba(255,255,255,0.35); }
+  #rail .pip.cur { height: 26px; background: var(--blue); }
+  #rail.on-blue .pip.cur { background: #fff; }
+
   .eyebrow {
     font-size: 0.82rem;
     font-weight: 600;
@@ -97,12 +127,12 @@
     transition: opacity 0.8s cubic-bezier(.22,.7,.3,1), transform 0.8s cubic-bezier(.22,.7,.3,1);
   }
   section.active .rv { opacity: 1; transform: none; }
-  section.active .rv.d1 { transition-delay: 0.15s; }
-  section.active .rv.d2 { transition-delay: 0.3s; }
-  section.active .rv.d3 { transition-delay: 0.45s; }
-  section.active .rv.d4 { transition-delay: 0.6s; }
-  section.active .rv.d5 { transition-delay: 0.78s; }
-  section.active .rv.d6 { transition-delay: 0.95s; }
+  section.active .rv.d1 { transition-delay: 0.5s; }
+  section.active .rv.d2 { transition-delay: 0.8s; }
+  section.active .rv.d3 { transition-delay: 1.1s; }
+  section.active .rv.d4 { transition-delay: 1.5s; }
+  section.active .rv.d5 { transition-delay: 1.9s; }
+  section.active .rv.d6 { transition-delay: 2.3s; }
   section:not(.active) .rv { transition-delay: 0s !important; transition-duration: 0.25s; }
 
   /* =============== SLIDE 1 · WE HEAR YOU =============== */
@@ -334,7 +364,7 @@
     position: absolute; inset: -20%;
     background: radial-gradient(circle at 50% 55%, rgba(255,255,255,0.16) 0%, transparent 45%);
     opacity: 0;
-    transition: opacity 1.4s ease 0.6s;
+    transition: opacity 1.4s ease 1.2s;
   }
   #reveal.active::before { opacity: 1; animation: breathe 5s ease-in-out 2s infinite; }
   @keyframes breathe { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.08); opacity: 0.75; } }
@@ -363,8 +393,8 @@
     filter: blur(14px);
     transform: scale(1.12);
     opacity: 0;
-    transition: opacity 1.1s ease 0.4s, letter-spacing 1.4s cubic-bezier(.2,.7,.3,1) 0.4s,
-                filter 1.1s ease 0.4s, transform 1.4s cubic-bezier(.2,.7,.3,1) 0.4s;
+    transition: opacity 1.1s ease 0.9s, letter-spacing 1.4s cubic-bezier(.2,.7,.3,1) 0.9s,
+                filter 1.1s ease 0.9s, transform 1.4s cubic-bezier(.2,.7,.3,1) 0.9s;
   }
   #reveal.active .name { opacity: 1; letter-spacing: -0.05em; filter: blur(0); transform: scale(1); }
   #reveal .byline {
@@ -392,7 +422,7 @@
     height: 86vh;
     z-index: 2;
     transform: translateY(70vh) rotate(8deg);
-    transition: transform 1.5s cubic-bezier(.2,.75,.25,1) 1s;
+    transition: transform 1.5s cubic-bezier(.2,.75,.25,1) 1.9s;
     filter: drop-shadow(0 30px 60px rgba(0,0,0,0.35));
     pointer-events: none;
   }
@@ -654,9 +684,9 @@
     padding: 1.3rem 2.2rem;
     box-shadow: 0 2px 16px rgba(10,10,10,0.05);
   }
-  .morphs .morph:nth-child(1) { --md: 0.35s; }
-  .morphs .morph:nth-child(2) { --md: 0.75s; }
-  .morphs .morph:nth-child(3) { --md: 1.15s; }
+  .morphs .morph:nth-child(1) { --md: 0.9s; }
+  .morphs .morph:nth-child(2) { --md: 1.5s; }
+  .morphs .morph:nth-child(3) { --md: 2.1s; }
   .morph .old {
     text-align: right;
     font-size: clamp(1.4rem, 2.8vw, 2.2rem);
@@ -756,7 +786,7 @@
     width: 0%;
     border-radius: 999px;
     background: #fff;
-    transition: width 2.2s cubic-bezier(.3,.7,.2,1) 0.8s;
+    transition: width 2.2s cubic-bezier(.3,.7,.2,1) 1.6s;
   }
   #monday.active .rollout-fill { width: 100%; }
   .rollout-node { position: absolute; top: 50%; }
@@ -773,7 +803,7 @@
   .rollout-node.n2 .nd {
     background: rgba(255,255,255,0.35);
     box-shadow: none;
-    transition: background 0.5s ease 2.8s, box-shadow 0.5s ease 2.8s;
+    transition: background 0.5s ease 3.6s, box-shadow 0.5s ease 3.6s;
   }
   #monday.active .rollout-node.n2 .nd { background: #fff; box-shadow: 0 0 0 5px rgba(255,255,255,0.25); }
   .rollout-node .nl {
@@ -817,8 +847,9 @@
   .pilot .who b { color: #fff; font-weight: 600; }
 
   .brand-footer {
-    margin-top: 6rem;
-    display: flex; justify-content: center; align-items: center;
+    position: absolute;
+    left: 8vw; right: 8vw; bottom: 2rem;
+    display: flex; justify-content: space-between; align-items: center;
     font-size: 0.78rem; color: rgba(255,255,255,0.6);
     letter-spacing: 0.05em;
   }
@@ -831,6 +862,21 @@
   .wordmark .mark svg { width: 100%; height: 100%; display: block; }
   .wordmark .word { font-weight: 700; font-size: 1.1rem; letter-spacing: -0.02em; color: #fff; }
 
+  /* ---------- scroll-lock progress hint ---------- */
+  #lockbar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px; width: 100%;
+    z-index: 300;
+    transform-origin: left;
+    transform: scaleX(0);
+    background: var(--blue);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  #lockbar.running { opacity: 1; transition: opacity 0.3s ease, transform var(--lockdur, 3s) linear; transform: scaleX(1); }
+
   @media (max-width: 700px) {
     .concerns { flex-direction: column; }
     .morph { grid-template-columns: 1fr; padding: 1.1rem 1.3rem; gap: 0.4rem; }
@@ -839,6 +885,7 @@
     .morph .arrow svg { transform: rotate(90deg); }
     .dotgrid { grid-template-columns: repeat(10, 1fr); }
     #topnav .pill { display: none; }
+    #rail { right: 0.8rem; }
   }
 </style>
 </head>
@@ -851,6 +898,8 @@
   </symbol>
 </svg>
 
+<div id="lockbar" aria-hidden="true"></div>
+
 <header id="topnav">
   <span class="brand">
     <span class="mark"><svg><use href="#e-mark"/></svg></span>
@@ -860,10 +909,12 @@
   <span class="pill">Rolling out from Monday</span>
 </header>
 
+<nav id="rail" aria-label="Slides"></nav>
+
 <div id="deck">
 
 <!-- ============ 1 · WE HEAR YOU ============ -->
-<section id="hear" class="tall">
+<section id="hear">
   <div class="glow" aria-hidden="true"></div>
   <div class="flashfx" aria-hidden="true"></div>
   <div class="eyebrow hear-eyebrow rv">We hear you</div>
@@ -897,7 +948,7 @@
 </section>
 
 <!-- ============ 3 · THE REVEAL ============ -->
-<section id="reveal" class="on-blue tall">
+<section id="reveal" class="on-blue">
   <svg class="watermark" viewBox="0 0 128 128" style="color:#fff"><use href="#e-mark"/></svg>
   <p class="question rv">What if no applicant ever waited?</p>
   <h2 class="name">SmartView</h2>
@@ -911,7 +962,7 @@
 </section>
 
 <!-- ============ 4 · LIVE DEMO ============ -->
-<section id="demo" class="tall">
+<section id="demo">
   <div class="eyebrow rv">Watch a lead become a viewing</div>
 
   <div class="demo-top rv d1">
@@ -1004,7 +1055,7 @@
 </section>
 
 <!-- ============ 5 · MONDAY ============ -->
-<section id="monday" class="on-blue tall">
+<section id="monday" class="on-blue">
   <svg class="watermark" viewBox="0 0 128 128" style="color:#fff"><use href="#e-mark"/></svg>
   <div class="eyebrow rv" style="color:rgba(255,255,255,0.7)">Zero setup</div>
   <h2 class="rv d1">Rolling out from Monday.</h2>
@@ -1037,9 +1088,23 @@
 </div>
 
 <script>
+  const deck = document.getElementById('deck');
   const sections = Array.from(document.querySelectorAll('section'));
+  const rail = document.getElementById('rail');
+  const SLIDE_MS = 950;
+  let current = 0;
+  let locked = false;
 
-  // ---- split hero problems into per-letter spans with staggered delays ----
+  // ---- progress rail ----
+  sections.forEach((s, i) => {
+    const pip = document.createElement('button');
+    pip.className = 'pip';
+    pip.setAttribute('aria-label', 'Slide ' + (i + 1));
+    pip.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
+    rail.appendChild(pip);
+  });
+
+  // ---- split slide-1 problems into per-letter spans with staggered delays ----
   document.querySelectorAll('#hear .track').forEach((track, li) => {
     const textNode = track.firstChild; // the problem text
     const text = textNode.textContent;
@@ -1199,26 +1264,104 @@
   }
   document.getElementById('demoReplay').addEventListener('click', (e) => { e.stopPropagation(); startDemo(); });
 
-  // ---- section activation on scroll (landing page) ----
-  function activate(sec) {
-    if (sec.classList.contains('active')) return;
-    sec.classList.add('active');
-    if (sec.id === 'pain') { playDots(); setTimeout(() => playCounts(sec), 1000); }
-    if (sec.id === 'demo') startDemo();
+  // ---- animation lock: first viewing of a slide blocks advancing until its
+  // choreography finishes (going back is always allowed). Durations measured
+  // from activation, derived from the CSS delays above.
+  const ANIM_MS = {
+    hear:   5500,  // char reveal ~3.1s, underlines to 3.9s, focus-pull + TODAY stamp end ~5.15s
+    pain:   4000,  // dots 700ms + 100*13ms, counts start 2.2s + 1.3s run, .rv d5 1.9s + 0.8s
+    reveal: 3500,  // name blur-in 0.9s + 1.4s, phone rise 1.9s + 1.5s
+    demo:   13500, // scripted demo runs to 13.0s — watch it through
+    proof:  3500,  // last morph --md 2.1s + 0.9s offset + 0.55s duration
+    monday: 0,     // last slide, nothing to gate
+  };
+  const seenSlides = new Set();
+  const lockbar = document.getElementById('lockbar');
+  let animLockedUntil = 0;
+  const animLocked = () => performance.now() < animLockedUntil;
+
+  function armAnimLock(sec) {
+    if (seenSlides.has(sec.id)) return;
+    seenSlides.add(sec.id);
+    const ms = ANIM_MS[sec.id] || 0;
+    if (!ms) return;
+    animLockedUntil = performance.now() + ms;
+    // subtle progress hint along the top while the choreography plays
+    lockbar.classList.remove('running');
+    lockbar.style.setProperty('--lockdur', ms + 'ms');
+    void lockbar.offsetWidth; // reflow so the transform transition restarts
+    lockbar.classList.add('running');
+    setTimeout(() => { if (!animLocked()) lockbar.classList.remove('running'); }, ms + 50);
   }
-  function deactivate(sec) {
-    if (!sec.classList.contains('active')) return;
-    sec.classList.remove('active');
-    if (sec.id === 'pain') resetDots();
-    if (sec.id === 'demo') stopDemo();
+
+  // ---- slide activation ----
+  function goTo(i) {
+    const next = Math.min(Math.max(i, 0), sections.length - 1);
+    if (next === current && sections[current].classList.contains('active')) return;
+    if (next > current && animLocked()) return; // forward gated while choreography plays
+    locked = true;
+    current = next;
+
+    deck.style.transform = 'translateY(-' + current * 100 + 'vh)';
+    sections.forEach((s, idx) => s.classList.toggle('active', idx === current));
+    rail.querySelectorAll('.pip').forEach((p, idx) => p.classList.toggle('cur', idx === current));
+    rail.classList.toggle('on-blue', sections[current].classList.contains('on-blue'));
+
+    const sec = sections[current];
+    if (sec.id === 'pain') { playDots(); setTimeout(() => playCounts(sec), 2200); }
+    else resetDots();
+    if (sec.id === 'demo') startDemo(); else stopDemo();
+
+    armAnimLock(sec);
+    setTimeout(() => { locked = false; }, SLIDE_MS + 150);
   }
-  const secObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.intersectionRatio >= 0.35) activate(e.target);
-      else if (e.intersectionRatio <= 0.05) deactivate(e.target);
-    });
-  }, { threshold: [0.05, 0.35] });
-  sections.forEach(s => secObserver.observe(s));
+
+  // ---- wheel (trackpad-safe: accumulate + lockout) ----
+  let wheelAcc = 0;
+  window.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (locked) return;
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) > 60) {
+      goTo(current + (wheelAcc > 0 ? 1 : -1));
+      wheelAcc = 0;
+    }
+  }, { passive: false });
+  setInterval(() => { wheelAcc *= 0.6; }, 120);
+
+  // ---- touch ----
+  let touchY = null;
+  window.addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+  window.addEventListener('touchend', (e) => {
+    if (touchY === null || locked) return;
+    const dy = touchY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 50) goTo(current + (dy > 0 ? 1 : -1));
+    touchY = null;
+  }, { passive: true });
+
+  // ---- keys + click ----
+  window.addEventListener('keydown', (e) => {
+    if (['ArrowDown', 'PageDown', ' ', 'Enter', 'ArrowRight'].includes(e.key)) { e.preventDefault(); if (!locked) goTo(current + 1); }
+    if (['ArrowUp', 'PageUp', 'ArrowLeft'].includes(e.key)) { e.preventDefault(); if (!locked) goTo(current - 1); }
+    if (e.key === 'Home') { e.preventDefault(); if (!locked) goTo(0); }
+    if (e.key === 'End') { e.preventDefault(); if (!locked) goTo(sections.length - 1); }
+  });
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('a, button, img')) return;
+    if (!locked) goTo(current + 1);
+  });
+
+  // debug hook (harmless in production, used by automated verification)
+  window.__svDebug = {
+    goTo,
+    isLocked: () => locked,
+    isAnimLocked: () => animLocked(),
+    current: () => current,
+    seen: () => [...seenSlides],
+  };
+
+  // start
+  goTo(0);
 </script>
 
 </body>
